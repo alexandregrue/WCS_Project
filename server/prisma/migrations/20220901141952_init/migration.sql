@@ -1,31 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the `Post` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Profile` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `firstname` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `lastname` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropForeignKey
-ALTER TABLE `Post` DROP FOREIGN KEY `Post_authorId_fkey`;
-
--- DropForeignKey
-ALTER TABLE `Profile` DROP FOREIGN KEY `Profile_userId_fkey`;
-
--- AlterTable
-ALTER TABLE `User` DROP COLUMN `name`,
-    ADD COLUMN `firstname` VARCHAR(255) NOT NULL,
-    ADD COLUMN `lastname` VARCHAR(255) NOT NULL,
-    ADD COLUMN `profilePicture` VARCHAR(255) NULL;
-
--- DropTable
-DROP TABLE `Post`;
-
--- DropTable
-DROP TABLE `Profile`;
-
 -- CreateTable
 CREATE TABLE `ActivationKey` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -109,6 +81,22 @@ CREATE TABLE `TasksUsers` (
     `userId` INTEGER NOT NULL,
     `taskId` INTEGER NOT NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(191) NOT NULL,
+    `firstname` VARCHAR(255) NOT NULL,
+    `lastname` VARCHAR(255) NOT NULL,
+    `userRole` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `profilePicture` VARCHAR(255) NULL,
+
+    UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

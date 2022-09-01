@@ -35,7 +35,6 @@ model Comment {
 model Organization {
   id      Int      @id @default(autoincrement())
   name   String   @unique
-  roleInOranisation    String       @db.VarChar(255)
   users   OrganizationsUsers[]
   activationKeys   ActivationKey[]
   projects   Project[]
@@ -48,6 +47,7 @@ model OrganizationsUsers {
   userId     Int // relation scalar field (used in the `@relation` attribute above)
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int // relation scalar field (used in the `@relation` attribute above)
+  roleInOranisation    String       @db.VarChar(255)
 }
 
 model Project {
@@ -98,6 +98,10 @@ model User {
   email   String   @unique
   firstname    String       @db.VarChar(255)
   lastname   String     @db.VarChar(255)
+  userRole   String     @db.VarChar(255)
+  password   String     @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   profilePicture String?        @db.VarChar(255)
   organizations OrganizationsUsers[]
   activationKeys   ActivationKey[]
