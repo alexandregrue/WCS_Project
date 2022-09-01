@@ -1,7 +1,12 @@
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+  firstname    String       @db.VarChar(255)
+  lastname   String     @db.VarChar(255)
+  profilePicture String?        @db.VarChar(255)
+  organizations OrganizationsUsers[]
+  activationKeys   ActivationKey[]
+  projects   ProjectsUsers[]
+  tasks   TasksUsers[]
+  comments   Comment[]
 }

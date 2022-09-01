@@ -1,0 +1,13 @@
+model Task {
+  id      Int      @id @default(autoincrement())
+  title   String        @db.VarChar(255)
+  description   String      @db.VarChar(255)
+  createdAt DateTime @default(now())
+  timeEstimation   Int?     @db.Int
+  beginningDate DateTime?
+  durationTime Int?     @db.Int
+  project      Project     @relation(fields: [projectId], references: [id])
+  projectId   Int
+  users TasksUsers[]
+  comments Comment[]
+}

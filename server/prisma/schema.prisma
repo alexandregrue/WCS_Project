@@ -12,28 +12,96 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+model ActivationKey {
+  id      Int      @id @default(autoincrement())
+  userEmail   String        @db.VarChar(255)
+  expirationDate    DateTime
+  organization      Organization     @relation(fields: [organizationId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  organizationId   Int
+  userId   Int
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+model Comment {
+  id      Int      @id @default(autoincrement())
+  content   String      @db.VarChar(255)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId   Int
+  taskId   Int
+}
+
+model Organization {
+  id      Int      @id @default(autoincrement())
+  name   String   @unique
+  roleInOranisation    String       @db.VarChar(255)
+  users   OrganizationsUsers[]
+  activationKeys   ActivationKey[]
+  projects   Project[]
+
+}
+
+model OrganizationsUsers {
+  id      Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int // relation scalar field (used in the `@relation` attribute above)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int // relation scalar field (used in the `@relation` attribute above)
+}
+
+model Project {
+  id      Int      @id @default(autoincrement())
+  name   String     @db.VarChar(255)
+  createdAt DateTime @default(now())
+  timeEstimation   Int?     @db.Int
+  beginningDate DateTime?
+  durationTime Int?     @db.Int
+  organization      Organization     @relation(fields: [organizationId], references: [id])
+  organizationId   Int
+  tasks Task[]
+  users ProjectsUsers[]
+}
+
+model ProjectsUsers {
+  id      Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int // relation scalar field (used in the `@relation` attribute above)
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int // relation scalar field (used in the `@relation` attribute above)
+}
+
+model Task {
+  id      Int      @id @default(autoincrement())
+  title   String        @db.VarChar(255)
+  description   String      @db.VarChar(255)
+  createdAt DateTime @default(now())
+  timeEstimation   Int?     @db.Int
+  beginningDate DateTime?
+  durationTime Int?     @db.Int
+  project      Project     @relation(fields: [projectId], references: [id])
+  projectId   Int
+  users TasksUsers[]
+  comments Comment[]
+}
+
+model TasksUsers {
+  id      Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int // relation scalar field (used in the `@relation` attribute above)
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int // relation scalar field (used in the `@relation` attribute above)
 }
 
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+  firstname    String       @db.VarChar(255)
+  lastname   String     @db.VarChar(255)
+  profilePicture String?        @db.VarChar(255)
+  organizations OrganizationsUsers[]
+  activationKeys   ActivationKey[]
+  projects   ProjectsUsers[]
+  tasks   TasksUsers[]
+  comments   Comment[]
 }

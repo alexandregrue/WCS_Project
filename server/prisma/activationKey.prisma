@@ -1,0 +1,9 @@
+model ActivationKey {
+  id      Int      @id @default(autoincrement())
+  userEmail   String        @db.VarChar(255)
+  expirationDate    DateTime
+  organization      Organization     @relation(fields: [organizationId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  organizationId   Int
+  userId   Int
+}

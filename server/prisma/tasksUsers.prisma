@@ -1,0 +1,7 @@
+model TasksUsers {
+  id      Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int // relation scalar field (used in the `@relation` attribute above)
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int // relation scalar field (used in the `@relation` attribute above)
+}
