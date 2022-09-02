@@ -10,68 +10,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
-const bcrypt = require('bcrypt');
-const password_service_1 = require("../services/password.service");
 const prisma = new client_1.PrismaClient();
 exports.default = {
     findAll: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const users = yield prisma.user.findMany();
-            res.json(users);
+            const activationKeys = yield prisma.activationKey.findMany();
+            res.json(activationKeys);
         });
     },
     findOne: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield prisma.user.findUnique({
+            console.log(req.params.id);
+            const activationKey = yield prisma.activationKey.findUnique({
                 where: {
                     id: Number(req.params.id),
                 },
             });
-            res.json(user);
+            res.json(activationKey);
         });
     },
     create: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, firstname, lastname, password } = req.body;
-            const hash = yield (0, password_service_1.hashPassword)(password);
-            const newUser = yield prisma.user.create({
+            const { userEmail } = req.body;
+            const expirationDate = new Date('now + 30 days');
+            const newActivationKey = yield prisma.activationKey.create({
                 data: {
-                    email,
-                    firstname,
-                    lastname,
-                    password: hash,
-                    userRole: 'USER'
+                    userEmail,
+                    expirationDate,
+                    organizationId: Number(req.params.organizationId),
+                    userId: Number(req.params.userId),
                 },
             });
-            res.json(newUser);
-        });
-    },
-    update: function (req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { email, firstname, lastname, password } = req.body;
-            const updatedUser = yield prisma.user.update({
-                where: {
-                    id: Number(req.params.id),
-                },
-                data: {
-                    email,
-                    firstname,
-                    lastname,
-                    password,
-                },
-            });
-            res.json(updatedUser);
+            res.json(newActivationKey);
         });
     },
     delete: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deletedUser = yield prisma.user.delete({
+            const deletedActivationKey = yield prisma.activationKey.delete({
                 where: {
                     id: Number(req.params.id),
                 }
             });
-            res.json(deletedUser);
+            res.json(deletedActivationKey);
         });
     }
 };
-//# sourceMappingURL=user.controller.js.map
+//# sourceMappingURL=activationKey.controller.js.map

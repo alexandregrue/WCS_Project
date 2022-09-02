@@ -5,5 +5,4 @@ const router = Router();
 
 router.post("/", authController.auth);
 
-
 export default router;

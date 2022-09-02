@@ -14,57 +14,61 @@ const prisma = new client_1.PrismaClient();
 exports.default = {
     findAll: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const users = yield prisma.organization.findMany();
-            res.json(users);
+            const organizations = yield prisma.organization.findMany();
+            res.json(organizations);
         });
     },
     findOne: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(req.params.id);
-            const user = yield prisma.organization.findUnique({
+            const organization = yield prisma.organization.findUnique({
                 where: {
                     id: Number(req.params.id),
                 },
             });
-            res.json(user);
+            res.json(organization);
         });
     },
     create: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name } = req.body;
-            const newUser = yield prisma.organization.create({
+            const newOrganizations = yield prisma.organization.create({
                 data: {
                     name,
                 },
             });
-            res.json(newUser);
+            const newOrganizationsUsers = yield prisma.organizationsUsers.create({
+                data: {
+                    organizationId: newOrganizations.id,
+                    userId: Number(req.params.userId),
+                    roleInOrganization: "ADMIN"
+                },
+            });
+            res.json(newOrganizations);
         });
     },
     update: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, firstname, lastname, password } = req.body;
-            const updatedUser = yield prisma.organization.update({
+            const { name } = req.body;
+            const updatedTask = yield prisma.organization.update({
                 where: {
                     id: Number(req.params.id),
                 },
                 data: {
-                    email,
-                    firstname,
-                    lastname,
-                    password,
+                    name
                 },
             });
-            res.json(updatedUser);
+            res.json(updatedTask);
         });
     },
     delete: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deletedUser = yield prisma.organization.delete({
+            const deletedTask = yield prisma.organization.delete({
                 where: {
                     id: Number(req.params.id),
                 }
             });
-            res.json(deletedUser);
+            res.json(deletedTask);
         });
     }
 };

@@ -10,68 +10,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
-const bcrypt = require('bcrypt');
-const password_service_1 = require("../services/password.service");
 const prisma = new client_1.PrismaClient();
 exports.default = {
     findAll: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const users = yield prisma.user.findMany();
-            res.json(users);
+            const comments = yield prisma.comment.findMany();
+            res.json(comments);
         });
     },
     findOne: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield prisma.user.findUnique({
+            console.log(req.params.id);
+            const comment = yield prisma.comment.findUnique({
                 where: {
                     id: Number(req.params.id),
                 },
             });
-            res.json(user);
+            res.json(comment);
         });
     },
     create: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, firstname, lastname, password } = req.body;
-            const hash = yield (0, password_service_1.hashPassword)(password);
-            const newUser = yield prisma.user.create({
+            const { content } = req.body;
+            const newComment = yield prisma.comment.create({
                 data: {
-                    email,
-                    firstname,
-                    lastname,
-                    password: hash,
-                    userRole: 'USER'
+                    content,
+                    userId: Number(req.params.userId),
+                    taskId: Number(req.params.taskId),
                 },
             });
-            res.json(newUser);
+            res.json(newComment);
         });
     },
     update: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, firstname, lastname, password } = req.body;
-            const updatedUser = yield prisma.user.update({
+            const { content } = req.body;
+            const updatedComment = yield prisma.comment.update({
                 where: {
                     id: Number(req.params.id),
                 },
                 data: {
-                    email,
-                    firstname,
-                    lastname,
-                    password,
+                    content,
                 },
             });
-            res.json(updatedUser);
+            res.json(updatedComment);
         });
     },
     delete: function (req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deletedUser = yield prisma.user.delete({
+            const deletedComment = yield prisma.comment.delete({
                 where: {
                     id: Number(req.params.id),
                 }
             });
-            res.json(deletedUser);
+            res.json(deletedComment);
         });
     }
 };
-//# sourceMappingURL=user.controller.js.map
+//# sourceMappingURL=comment.controller.js.map
