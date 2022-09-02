@@ -1,5 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+const bcrypt = require('bcrypt');
+import { hashPassword } from '../services/password.service';
+
 
 const prisma = new PrismaClient()
 
@@ -11,7 +14,6 @@ export default {
     },
 
     findOne: async function (req: Request, res: Response) {
-        console.log(req.params.id)
         const user = await prisma.user.findUnique({
             where: {
                 id: Number(req.params.id),
@@ -22,12 +24,13 @@ export default {
 
     create: async function (req: Request, res: Response) {
         const {email, firstname, lastname, password} = req.body;
+        const hash = await hashPassword(password);
         const newUser = await prisma.user.create({
             data: {
                 email,
                 firstname,
                 lastname,
-                password,
+                password: hash,
                 userRole: 'USER'
             },
         });
