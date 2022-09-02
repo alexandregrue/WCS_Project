@@ -1,8 +1,8 @@
 model OrganizationsUsers {
-  id      Int      @id @default(autoincrement())
+  roleInOrganization    String       @db.VarChar(255)
   user       User     @relation(fields: [userId], references: [id])
   userId     Int // relation scalar field (used in the `@relation` attribute above)
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int // relation scalar field (used in the `@relation` attribute above)
-  roleInOranisation    String       @db.VarChar(255)
+  @@id([userId, organizationId])
 }

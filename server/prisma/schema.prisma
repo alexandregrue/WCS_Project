@@ -42,12 +42,12 @@ model Organization {
 }
 
 model OrganizationsUsers {
-  id      Int      @id @default(autoincrement())
+  roleInOrganization    String       @db.VarChar(255)
   user       User     @relation(fields: [userId], references: [id])
   userId     Int // relation scalar field (used in the `@relation` attribute above)
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int // relation scalar field (used in the `@relation` attribute above)
-  roleInOranisation    String       @db.VarChar(255)
+  @@id([userId, organizationId])
 }
 
 model Project {
@@ -64,11 +64,11 @@ model Project {
 }
 
 model ProjectsUsers {
-  id      Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])
   userId     Int // relation scalar field (used in the `@relation` attribute above)
   project   Project @relation(fields: [projectId], references: [id])
   projectId Int // relation scalar field (used in the `@relation` attribute above)
+  @@id([userId, projectId])
 }
 
 model Task {

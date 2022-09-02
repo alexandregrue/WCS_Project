@@ -24,7 +24,6 @@ CREATE TABLE `Comment` (
 CREATE TABLE `Organization` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `roleInOranisation` VARCHAR(255) NOT NULL,
 
     UNIQUE INDEX `Organization_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -32,11 +31,11 @@ CREATE TABLE `Organization` (
 
 -- CreateTable
 CREATE TABLE `OrganizationsUsers` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `roleInOrganization` VARCHAR(255) NOT NULL,
     `userId` INTEGER NOT NULL,
     `organizationId` INTEGER NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`userId`, `organizationId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -54,11 +53,10 @@ CREATE TABLE `Project` (
 
 -- CreateTable
 CREATE TABLE `ProjectsUsers` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
     `projectId` INTEGER NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`userId`, `projectId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
